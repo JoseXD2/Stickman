@@ -2997,11 +2997,12 @@ class PlayState extends MusicBeatState
 							   inCutscene = true;
 							   PlayState.isStoryMode = true;
 							   paused = true;
-				         	   
+				         	        video.playMP4(Paths.video('song2'), new PlayState()); 
+
 							case "fight":
 								inCutscene = true;
 								paused = true;
-								
+							video.playMP4(Paths.video('song3'), new PlayState()); 	
                        	 	default:
                            		LoadingState.loadAndSwitchState(new PlayState());
                      	}
