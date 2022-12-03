@@ -25,7 +25,8 @@ class MP4Handler
 	
 	public static var vlcBitmap:VlcBitmap;
 	
-
+        public var bitmap:VlcBitmap;
+	
 	public function new()
 	{
 
