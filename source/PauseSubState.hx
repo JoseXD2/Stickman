@@ -2,9 +2,9 @@ package;
 
 import flixel.input.gamepad.FlxGamepad;
 import openfl.Lib;
-
+#if windows 
 import llua.Lua;
-
+#end
 import Controls.Control;
 import flixel.FlxG;
 import flixel.FlxSprite;
