@@ -171,8 +171,7 @@ class MP4Handler
 		vlcBitmap.volume = FlxG.sound.volume + 0.3; // shitty volume fix. then make it louder.
 		if (FlxG.sound.volume <= 0.1) vlcBitmap.volume = 0;
 	}
-	#end
-
+	
 	/////////////////////////////////////////////////////////////////////////////////////
 
 	function client_onMetaData(path)
