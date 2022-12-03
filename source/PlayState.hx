@@ -727,39 +727,11 @@ class PlayState extends MusicBeatState
 			}
 			case 'jackroom':
 				{
-					    defaultCamZoom = 0.9;
+					defaultCamZoom = 0.9;
 						
 						curStage = 'jackroom';
-						var images = [];
-						var xml = [];
-			
-						trace("caching images...");
 						
-							for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/kack")))
-								{
-									if (!i.endsWith(".png"))
-										continue;
-									images.push(i);
-						
-									if (!i.endsWith(".xml"))
-										continue;
-									xml.push(i);
-								}
-							for (i in images)
-									{
-										var replaced = i.replace(".png","");
-										FlxG.bitmap.add(Paths.image("kack/" + replaced,"shared"));
-										
-										trace("cached " + replaced);
-									}
-								
-								for (i in xml)
-									{
-										var replaced = i.replace(".xml","");
-										FlxG.bitmap.add(Paths.image("kack/" + replaced,"shared"));
-										
-										trace("cached " + replaced);
-									}
+									
 						var bg:FlxSprite = new FlxSprite(-3000, -200).loadGraphic(Paths.image('kack/Jack BG'));
 						bg.antialiasing = true;
 						bg.scrollFactor.set(0.9, 0.9);
@@ -769,44 +741,15 @@ class PlayState extends MusicBeatState
 						fightgf = new Character(400, 130,'fighting');
 						add(fightgf);
 						fightgf.alpha = 0;
-						fightgf.scrollFactor.set(0.95, 0.95);
+						fightgf.scrollFactor.set(0.95, 0.95);    
 				    	
 				}
 			case 'jackroomfight':
 				{
-					    defaultCamZoom = 0.9;
+					defaultCamZoom = 0.9;
 						
 						curStage = 'jackroomfight';
-						var images = [];
-						var xml = [];
-			
-						trace("caching images...");
 						
-							for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/kack")))
-								{
-									if (!i.endsWith(".png"))
-										continue;
-									images.push(i);
-						
-									if (!i.endsWith(".xml"))
-										continue;
-									xml.push(i);
-								}
-							for (i in images)
-									{
-										var replaced = i.replace(".png","");
-										FlxG.bitmap.add(Paths.image("kack/" + replaced,"shared"));
-										
-										trace("cached " + replaced);
-									}
-								
-								for (i in xml)
-									{
-										var replaced = i.replace(".xml","");
-										FlxG.bitmap.add(Paths.image("kack/" + replaced,"shared"));
-										
-										trace("cached " + replaced);
-									}
 						var bg:FlxSprite = new FlxSprite(-3000, -200).loadGraphic(Paths.image('kack/Jack BG'));
 						bg.antialiasing = true;
 						bg.scrollFactor.set(0.9, 0.9);
@@ -821,43 +764,14 @@ class PlayState extends MusicBeatState
 						fightgf = new Character(400, 130,'fighting');
 						add(fightgf);
 						fightgf.alpha = 0;
-						fightgf.scrollFactor.set(0.95, 0.95);
+						fightgf.scrollFactor.set(0.95, 0.95);    
 				    	
 				}
 			case 'disyroom':
 				{
 					defaultCamZoom = 0.9;
 					curStage = 'disyroom';
-					var images = [];
-						var xml = [];
-			
-						trace("caching images...");
-						
-							for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/disy")))
-								{
-									if (!i.endsWith(".png"))
-										continue;
-									images.push(i);
-						
-									if (!i.endsWith(".xml"))
-										continue;
-									xml.push(i);
-								}
-							for (i in images)
-									{
-										var replaced = i.replace(".png","");
-										FlxG.bitmap.add(Paths.image("disy/" + replaced,"shared"));
-										
-										trace("cached " + replaced);
-									}
-								
-								for (i in xml)
-									{
-										var replaced = i.replace(".xml","");
-										FlxG.bitmap.add(Paths.image("disy/" + replaced,"shared"));
-										
-										trace("cached " + replaced);
-									}
+					
 					room = new FlxSprite(-800, -200).loadGraphic(Paths.image('kack/Jack BG'));
 					room.antialiasing = true;
 					room.scrollFactor.set(0.9, 0.9);
@@ -1266,6 +1180,9 @@ class PlayState extends MusicBeatState
 		if (loadRep)
 			replayTxt.cameras = [camHUD];
 
+		#if android
+	        addAndroidControls();
+	#end			
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
 		// UI_camera.zoom = 1;
@@ -1430,6 +1347,10 @@ class PlayState extends MusicBeatState
 
 	function startCountdown():Void
 	{
+		#if android
+	        androidc.visible = true;
+	        #end
+			
 		inCutscene = false;
 
 		generateStaticArrows(0);
@@ -2241,7 +2162,7 @@ class PlayState extends MusicBeatState
 
 		scoreTxt.x = (originalX - (lengthInPx / 2)) + 335;
 
-		if (controls.PAUSE && startedCountdown && canPause)
+		if (controls.PAUSE #if android || FlxG.android.justReleased.BACK #end && startedCountdown && canPause)
 		{
 			persistentUpdate = false;
 			persistentDraw = true;
@@ -2944,14 +2865,6 @@ class PlayState extends MusicBeatState
 			if (isStoryMode)
 				campaignMisses = misses;
 	
-			if (!loadRep)
-				rep.SaveReplay(saveNotes, saveJudge, replayAna);
-			else
-			{
-				PlayStateChangeables.botPlay = false;
-				PlayStateChangeables.scrollSpeed = 1;
-				PlayStateChangeables.useDownscroll = false;
-			}
 	
 			if (FlxG.save.data.fpsCap > 290)
 				(cast (Lib.current.getChildAt(0), Main)).setFPSCap(290);
@@ -3084,12 +2997,11 @@ class PlayState extends MusicBeatState
 							   inCutscene = true;
 							   PlayState.isStoryMode = true;
 							   paused = true;
-				         	   video.playMP4(Paths.video('song2'), new PlayState()); 
-								
+				         	   
 							case "fight":
 								inCutscene = true;
 								paused = true;
-								video.playMP4(Paths.video('song3'), new PlayState()); 
+								
                        	 	default:
                            		LoadingState.loadAndSwitchState(new PlayState());
                      	}
@@ -3460,12 +3372,7 @@ class PlayState extends MusicBeatState
 					releaseArray = [false, false, false, false];
 				} 
 
-				var anas:Array<Ana> = [null,null,null,null];
-
-				for (i in 0...pressArray.length)
-					if (pressArray[i])
-						anas[i] = new Ana(Conductor.songPosition, null, false, "miss", i);
-
+				
 				// HOLDS, check for sustain notes
 				if (holdArray.contains(true) && /*!boyfriend.stunned && */ generatedMusic)
 				{
@@ -3476,8 +3383,6 @@ class PlayState extends MusicBeatState
 					});
 				}
 		 
-				if (KeyBinds.gamepad && !FlxG.keys.justPressed.ANY)
-				{
 					// PRESSES, check for note hits
 					if (pressArray.contains(true) && generatedMusic)
 					{
@@ -3548,9 +3453,7 @@ class PlayState extends MusicBeatState
 										mashViolations--;
 									scoreTxt.color = FlxColor.WHITE;
 									var noteDiff:Float = -(coolNote.strumTime - Conductor.songPosition);
-									anas[coolNote.noteData].hit = true;
-									anas[coolNote.noteData].hitJudge = Ratings.CalculateRating(noteDiff, Math.floor((PlayStateChangeables.safeFrames / 60) * 1000));
-									anas[coolNote.noteData].nearestNote = [coolNote.strumTime,coolNote.noteData,coolNote.sustainLength];
+									
 									goodNoteHit(coolNote);
 								}
 							}
@@ -3563,11 +3466,7 @@ class PlayState extends MusicBeatState
 							}
 					}
 
-					if (!loadRep)
-						for (i in anas)
-							if (i != null)
-								replayAna.anaArray.push(i); // put em all there
-				}
+					
 				notes.forEachAlive(function(daNote:Note)
 				{
 					if(PlayStateChangeables.useDownscroll && daNote.y > strumLine.y ||
