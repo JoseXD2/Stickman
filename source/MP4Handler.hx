@@ -22,9 +22,9 @@ class MP4Handler
 	public static var netStream:NetStream;
 	public static var finishCallback:FlxState;
 	public var sprite:FlxSprite;
-	#if desktop
+	
 	public static var vlcBitmap:VlcBitmap;
-	#end
+	
 
 	public function new()
 	{
