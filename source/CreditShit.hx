@@ -220,6 +220,10 @@ class CreditShit extends MusicBeatSubstate
             trace(youtubeshit);
             trace(twittershit);
             trace(text);
+		
+		#if android
+		addVirtualPad(NONE, B);
+		#end
         
         }
     override function update(elapsed:Float)
@@ -227,7 +231,7 @@ class CreditShit extends MusicBeatSubstate
         if (FlxG.sound.music != null)
             Conductor.songPosition = FlxG.sound.music.time;
 
-        if (FlxG.keys.justPressed.ESCAPE)
+        if (controls.BACK)
         {
             if(jz)
                 {
