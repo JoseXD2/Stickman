@@ -1,6 +1,6 @@
 package;
 
-#if (!android && desktop)
+import android.net.Uri;
 import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxState;
@@ -80,10 +80,17 @@ class MP4Handler
 
 		FlxG.stage.addEventListener(Event.ENTER_FRAME, update);
 
+		#if android
 		if (repeat)
-			vlcBitmap.repeat = -1;
+			bitmap.repeat = 65535;
 		else
-			vlcBitmap.repeat = 0;
+			bitmap.repeat = 0;
+		#else
+		if (repeat)
+			bitmap.repeat = -1;
+		else
+			bitmap.repeat = 0;
+		#end
 
 		vlcBitmap.inWindow = isWindow;
 		vlcBitmap.fullscreen = isFullscreen;
@@ -101,18 +108,9 @@ class MP4Handler
 		#end
 	}
 
-	#if desktop
 	function checkFile(fileName:String):String
 	{
-		var pDir = "";
-		var appDir = "file:///" + Sys.getCwd() + "/";
-
-		if (fileName.indexOf(":") == -1) // Not a path
-			pDir = appDir;
-		else if (fileName.indexOf("file://") == -1 || fileName.indexOf("http") == -1) // C:, D: etc? ..missing "file:///" ?
-			pDir = "file:///";
-
-		return pDir + fileName;
+		return Uri.fromFile(fileName);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -224,4 +222,4 @@ class MP4Handler
 		ns.close();
 	 */
 }
-#end
+
